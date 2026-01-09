@@ -1,0 +1,77 @@
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int d) {
+        data = d;
+        left = right = null;
+    }
+}
+*/
+
+class Solution {
+    public boolean isleaf(Node root){
+        if(root.left==null && root.right==null){
+            return true;
+        }
+        return false;
+    }
+    
+    public void left(Node root,ArrayList<Integer> ans){
+        //jab bhi leaf node na ho add to ans,keep on travelling left
+        //next left kabhi null ho jaye to right move krna 
+        //repeat it till temp leaf tak na pohnch jaye
+        Node temp=root.left;
+        while(temp!=null){
+            if(isleaf(temp)==false){
+                ans.add(temp.data);
+            }
+            if(temp.left!=null) temp=temp.left;
+            else temp=temp.right;
+        }
+    }
+    
+    public void leafs(Node root,ArrayList<Integer> ans){
+        //go left completely and then return after finding a leaf node but add to ans first
+        //then go right completely till its not null and then add leaf node and return
+        if(isleaf(root)==true){
+            ans.add(root.data);
+            return;
+        }
+        if(root.left!=null) leafs(root.left,ans);
+        if(root.right!=null) leafs(root.right,ans);
+    }
+    
+    public void right(Node root,ArrayList<Integer> ans){
+        //jab bhi leaf node na ho add to stack,keep on travelling right
+        //next right kabhi null ho jaye to left move krna 
+        //repeat it till temp leaf tak na pohnch jaye
+        //we are using stack here taki hum jab elems nikale reverse hokar aaye
+        //last me stack se sare nikal kar ans me add kardena taki reverse ho jaye 
+        Node temp=root.right;
+        Stack<Integer> st=new Stack<>();
+        while(temp!=null){
+            if(isleaf(temp)==false){
+                st.push(temp.data);
+            }
+            if(temp.right!=null) temp=temp.right;
+            else temp=temp.left;
+        }
+        while(!st.isEmpty()){
+            ans.add(st.pop());
+        }
+    }
+    
+    ArrayList<Integer> boundaryTraversal(Node root) {
+         ArrayList<Integer> ans=new ArrayList<>();
+         if(root==null) return ans;
+         if(isleaf(root)==false) ans.add(root.data);
+         //go to left boundary then all leaf nodes and then to rigth boundary
+         //right boundary ko bhi root se hi travel karna hoga isliye at last usko reverse krdenge
+         left(root,ans);
+         leafs(root,ans);
+         right(root,ans);
+       return ans; 
+    }
+}
