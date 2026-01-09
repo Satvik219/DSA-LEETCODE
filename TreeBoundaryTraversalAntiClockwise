@@ -75,3 +75,7 @@ class Solution {
        return ans; 
     }
 }
+
+
+//T.C.=O(H)+O(W)+O(H) which is approx O(N)
+//S.C.=O(N)
