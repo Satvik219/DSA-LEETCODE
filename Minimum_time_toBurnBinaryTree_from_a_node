@@ -1,0 +1,71 @@
+1. do bfs to find the parent of each node and store it in a map
+2. if target is not given find target using dfs,whenever root.val==target return it,and from left and right whichever is not null keep on returning it
+3. do another bfs traversal starting from target node in all direction radially i.e left,right,parent and each level represent a unit time to burn nodes from the given target node
+4. queue will have the nodes of each level from target node
+5. also make a visited map,to check is a node is visited once,if visited do not add that node in queue again
+
+
+class Solution {
+    public Node Parents(Node root,Map<Node,Node> Child_parent,int target){
+        Queue<Node> q=new LinkedList<>();
+        q.offer(root);
+        Node res=null;
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                Node node=q.poll();
+                if(node.data==target) res=node;
+//parents ko store karte huye hi ye bhi check karlo ki target node konsa he from the given target value ye time reduce krega else dfs se nikalna padega target pehle
+
+                if(node.left!=null){
+                    q.offer(node.left);
+                    Child_parent.put(node.left,node);
+                }
+                if(node.right!=null){
+                    q.offer(node.right);
+                    Child_parent.put(node.right,node);
+                }
+            }
+        }
+        return res;
+    }
+    public int time_taken(Node root, int target) {
+        Map<Node,Node> Child_parent=new HashMap<>();
+        Node targett= Parents(root,Child_parent,target);
+        Queue<Node> q=new LinkedList<>();
+        Map<Node,Boolean> visited=new HashMap<>();
+        q.offer(targett);
+        visited.put(targett,true);
+        int min_time=0;
+        while(!q.isEmpty()){
+            int size=q.size();
+            int burned=0;
+//agar koi bhi node uss level pe burn nahi hua hoga to time increase nahi karenge hum isliye ek flag rkhe he taki koi bhi burn ho to pata rahe hume
+            for(int i=0;i<size;i++){
+                Node node=q.poll();
+                if(node.left!=null && visited.get(node.left)==null){
+                        burned=1;
+                        q.offer(node.left);
+                        visited.put(node.left,true);
+                }
+                if(node.right!=null && visited.get(node.right)==null){
+                        burned=1;
+                        q.offer(node.right);
+                        visited.put(node.right,true);
+                }
+                if(Child_parent.containsKey(node) && visited.get(Child_parent.get(node))==null){
+                        burned=1;
+                        q.offer(Child_parent.get(node));
+                        visited.put(Child_parent.get(node),true);
+                }
+            }
+            if(burned==1){
+                min_time++;
+            }
+        }
+        return min_time;
+    }
+    public int minTime(Node root, int target) {
+        int result=time_taken(root,target);
+        return result;
+    }
