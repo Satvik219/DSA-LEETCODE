@@ -1,0 +1,46 @@
+class Solution {
+
+    public static void changeTree(BinaryTreeNode<Integer> root) {
+        if (root == null) return;
+
+        int child = 0;
+
+        if (root.left != null) {
+            child += root.left.data;
+        }
+        if (root.right != null) {
+            child += root.right.data;
+        }
+          //child=left.data + right.data
+
+        // Step 1: Fix current node value
+        if (child >= root.data) {//no need to change left and right data,just change root's data to it's left+right i.e child
+            root.data = child;
+        } 
+        else { //child < root.data ,therefore change left and right child data to that of the root data
+            if (root.left != null) {
+                root.left.data = root.data;
+            } 
+            else  (root.right != null) {
+                root.right.data = root.data;
+            }
+        }
+
+        // Step 2: Recursive calls
+        changeTree(root.left);
+        changeTree(root.right);
+
+        // Step 3: Fix after recursion (bottom-up)
+        int tot = 0;
+        if (root.left != null) {
+            tot += root.left.data;
+        }
+        if (root.right != null) {
+            tot += root.right.data;
+        }
+
+        if (root.left != null || root.right != null) {//if it's not a leaf node change it's data
+            root.data = tot;
+        }
+    }
+}
