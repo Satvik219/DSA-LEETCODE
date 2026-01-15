@@ -1,0 +1,40 @@
+ static ArrayList<Integer> inOrder(Node root) {
+        ArrayList<Integer> res = new ArrayList<>();
+        Node curr = root;
+
+        while (curr != null) {
+            if (curr.left == null) {
+              
+                // If no left child, visit this node 
+                // and go right
+                res.add(curr.data);
+                curr = curr.right;
+            } 
+            else {
+              
+                // Find the inorder predecessor of curr
+                Node prev = curr.left;
+                while (prev.right != null && 
+                                   prev.right != curr) {
+                    prev = prev.right;
+                }
+
+                // Make curr the right child of its 
+                // inorder predecessor
+                // create a thread from inorder predecessor to curr and move curr to its left
+                if (prev.right == null) {
+                    prev.right = curr;
+                    curr = curr.left;
+                } 
+                else {
+                  
+                    // Revert the changes made in the tree structure
+                    // remove the thread if already exists from inorder predecessor to its curr, and add to ans, then go to right of curr
+                    prev.right = null;
+                    res.add(curr.data);
+                    curr = curr.right;
+                }
+            }
+        }
+        return res;
+    }
